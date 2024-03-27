@@ -100,7 +100,7 @@ module.exports.startSORAT = async (tbId) => {
         const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
         logger.info("startSORAT tabInfo :: ", tabInfo);
 
-        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: itemObject,timelimit:10});
+        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: itemObject,timelimit:12});
 
         setTimeout(async ()=> {
             // Clear destory 
