@@ -165,7 +165,15 @@ myIo.init = function (server) {
                     case CONST.ClearBetSORAT: {
                         await gamePlayActionsSORAT.ClearBetSORAT(payload.data, socket);
                         break;
-                    }
+                    }   
+
+                    case CONST.DoubleBetSORAT: {
+                        await gamePlayActionsSORAT.DoubleBetSORAT(payload.data, socket);
+                        break;
+                    }   
+
+                    
+
 
                     case CONST.LEAVETABLESORAT: {
                         await gamePlayActionsSORAT.leaveTable(payload.data, socket);

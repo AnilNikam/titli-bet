@@ -165,6 +165,7 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
         ]
 
         let itemIndex = tbInfo.TableObject.indexOf(itemObject)
+        
 
         for (let i = 0; i < tbInfo.playerInfo.length; i++) {
             if( tbInfo.playerInfo[i].seatIndex != undefined){
@@ -207,8 +208,18 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
 
                 console.log("TotalWinAmount ",TotalWinAmount)
 
-                TotalWinAmount != 0 && await walletActions.addWallet(tbInfo.playerInfo[i]._id, Number(TotalWinAmount), 4, "Sorat Win",tbInfo,tbInfo.playerInfo[i].sck,tbInfo.playerInfo[i].seatIndex,"SORAT");
+                if(TotalWinAmount != 0){
+                
+                    await walletActions.addWallet(tbInfo.playerInfo[i]._id, Number(TotalWinAmount), 4, "Sorat Win",tbInfo,tbInfo.playerInfo[i].sck,tbInfo.playerInfo[i].seatIndex,"SORAT");
+                    
+                    const upWh = {
+                        _id: MongoID(tbInfo._id.toString()),
+                        "playerInfo.seatIndex": Number(tbInfo.playerInfo[i].seatIndex)
+                    }
+                    
+                    await SoratTables.findOneAndUpdate(upWh,{$inc:{"playerInfo.$.totalbet":chalvalue}}, { new: true });
 
+                }
             }
         }
         const playerInGame = await roundStartActions.getPlayingUserInRound(tbInfo.playerInfo);
@@ -225,18 +236,18 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
         //     }
         // }
 
-      
+        const tbData = await SoratTables.findOne({
+            _id: MongoID(tbid.toString()),
+        }, {})
         commandAcions.sendEventInTable(tbInfo._id.toString(), CONST.SORATWINNER, {
             WinnerData:winnerData,
-            itemObject:itemObject
+            itemObject:itemObject,
+            playerInfo:tbData.playerInfo
         });
 
         
         setTimeout(async ()=>{
-
-        
-
-        await this.gameTimerStart(tbInfo);
+            await this.gameTimerStart(tbInfo);
         },8000)
     } catch (err) {
         logger.info("Exception  WinnerDeclareCall : 1 :: ", err)
