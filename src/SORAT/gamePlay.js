@@ -241,7 +241,7 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
         const project = {
 
         }
-        const tabInfo = await SpinnerTables.findOne(wh, project).lean();
+        const tabInfo = await SoratTables.findOne(wh, project).lean();
         logger.info("DoubleBetSORAT tabInfo : ", tabInfo);
 
         if (tabInfo == null) {
@@ -309,7 +309,7 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
         }
         logger.info("action upWh updateData :: ", upWh, updateData);
 
-        const tb = await SpinnerTables.findOneAndUpdate(upWh, updateData, { new: true });
+        const tb = await SoratTables.findOneAndUpdate(upWh, updateData, { new: true });
         logger.info("action tb : ", tb);
 
         let response = {

@@ -121,7 +121,7 @@ module.exports.findEmptySeatAndUserSeat = async (table, client) => {
         // };
         // let tbInfo = await SoratTables.findOne(wh,{}).lean();
         // logger.info("findEmptySeatAndUserSeat tbInfo : ", tbInfo)
-        let totalWallet = Number(userInfo.chips) + Number(userInfo.winningChips)
+        let totalWallet = Number(userInfo.chips) 
         let playerDetails = {
             seatIndex: seatIndex,
             _id: userInfo._id,
@@ -140,6 +140,7 @@ module.exports.findEmptySeatAndUserSeat = async (table, client) => {
             sck: client.id,
             playerSocketId: client.id,
             playerLostChips: 0,
+            playerWinChips: 0,
             Iscom:userInfo.Iscom != undefined ? userInfo.Iscom:0,
 
         }

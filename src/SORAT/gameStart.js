@@ -217,7 +217,7 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
                         "playerInfo.seatIndex": Number(tbInfo.playerInfo[i].seatIndex)
                     }
                     
-                    await SoratTables.findOneAndUpdate(upWh,{$inc:{"playerInfo.$.totalbet":chalvalue}}, { new: true });
+                    await SoratTables.findOneAndUpdate(upWh,{$inc:{"playerInfo.$.playerWinChips":TotalWinAmount}}, { new: true });
 
                 }
             }
