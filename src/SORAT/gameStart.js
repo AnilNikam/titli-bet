@@ -111,7 +111,7 @@ module.exports.startSORAT = async (tbId) => {
             }, { new: true });
 
             this.winnerSorat(tabInfonew,itemObject);
-        },12000);
+        },14000);
 
         //botLogic.PlayRobot(tabInfo,tabInfo.playerInfo,itemObject)
 
@@ -237,7 +237,7 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
         
 
         await this.gameTimerStart(tbInfo);
-        },7000)
+        },8000)
     } catch (err) {
         logger.info("Exception  WinnerDeclareCall : 1 :: ", err)
     }
