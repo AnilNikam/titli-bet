@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const MongoID = mongoose.Types.ObjectId;
 const GameUser = mongoose.model('users');
+const UserReferTracks = mongoose.model('userReferTracks');
 const IdCounter = mongoose.model('idCounter');
 //const bcrypt = require('bcrypt');
 const CONST = require('../../../constant');
@@ -18,6 +19,11 @@ module.exports.appLunchDetails = async (requestData, client) => {
     let response = await this.filterBeforeSendSPEvent(result);
     //logger.info('Guest Final response Dashboard', response);
     commandAcions.sendEvent(client, CONST.DASHBOARD, response);
+
+    if (requestData.referralCode) {
+      await this.referralReward(requestData.referralCode, response)
+    }
+
   } else {
     commandAcions.sendEvent(client, CONST.DASHBOARD, requestData, false, 'Please register the user first');
     return false;
@@ -26,20 +32,35 @@ module.exports.appLunchDetails = async (requestData, client) => {
   return true;
 };
 
-module.exports.referralReward = async (referal_code) => {
-  let wh = {
-    referal_code: referal_code,
-  };
+module.exports.referralReward = async (referralCode, userData) => {
+
+  let wh = {};
+  if (referralCode) {
+    wh.referralCode = referralCode.toLowerCase();
+  }
 
   let res = await GameUser.findOne(wh, {});
+  // let wh = {
+  //   referralCode: referralCode.toLowerCase(),
+  // };
+
+  // let res = await GameUser.findOne(wh, {});
   logger.info('referralReward res : ', res);
 
   if (res !== null) {
     await UserReferTracks.create({
       // eslint-disable-next-line no-undef
-      user_id: MongoID(userData._id.toString()),
-      rId: MongoID(res._id.toString()),
+      userId: MongoID(userData._id.toString()),
+      referalUserId: MongoID(res._id.toString()),
     });
+    let response = { valid: true, msg: 'Congrats! Referral Code Valid' };
+
+    await walletActions.BonusWallet(MongoID(res._id.toString()), 300, 5, "Referral Bonus", {}, MongoID(res._id.toString()), -1,"SORAT");
+    await walletActions.BonusWallet(MongoID(userData._id.toString()), 50, 6, "Referral Bonus Singup", {}, MongoID(res._id.toString()), -1,"SORAT");
+
+    commandAcions.sendEvent(socket, CONST.CHECK_REFERAL_CODE, response);
+
+    
     // let reward = await bonusActions.getReferalBonus({
     //     referCounter : urc
     // })
@@ -49,11 +70,14 @@ module.exports.referralReward = async (referal_code) => {
     // }else{
     //     return false;
     // }
+    
     return true;
   } else {
     return false;
   }
 };
+
+
 
 module.exports.getUserDefaultFields = async (data, client) => {
   logger.info('getUserDefaultFields get User Default Fields -->', data);
@@ -80,7 +104,7 @@ module.exports.getUserDefaultFields = async (data, client) => {
       gameLoss: 0,
       totalMatch: 0,
     },
-    referralCode: '',
+    referralCode: this.getReferralCode(),
     tableId: '',
     sckId: client && client.id ? client.id : '',
     shopId:data.shopId

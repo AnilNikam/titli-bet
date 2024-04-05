@@ -7,8 +7,8 @@ const commonHelper = require('../../helper/commonHelper');
 const mainCtrl = require('../../controller/adminController');
 const logger = require('../../../logger');
 
-// const Userdeposit = mongoose.model('userdeposit');
-// const Userpayout = mongoose.model('userpayout');
+const Userdeposit = mongoose.model('userdeposit');
+const Userpayout = mongoose.model('userpayout');
 
 
 /**
@@ -23,10 +23,10 @@ router.get('/DepositList', async (req, res) => {
     try {
         //console.info('requet => ', req);
 
-        // const DepositeList = await Userdeposit.find({ approve: 0, reject: 0 }, {
-        //     name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
-        //     acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
-        // })
+        const DepositeList = await Userdeposit.find({ approve: 0, reject: 0 }, {
+            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
+            acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
+        })
 
         //logger.info('admin/dahboard.js post dahboard  error => ', DepositeList);
 
