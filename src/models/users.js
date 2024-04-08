@@ -16,6 +16,9 @@ const GameUserSchema = new Schema(
     uniqueId: { type: String },
     email: { type: String, default: '' },
     password: { type: String, default: '' },
+    facebookid:{ type: String, default: '' },
+    googleid:{ type: String, default: '' },
+    loginType: { type: String, enum: ['Mobile', 'Guest', 'Facebook', 'Google'], require: true, default: 'Guest' },
     chips: { type: Number },
     winningChips: { type: Number },
     bonus:{ type: Number },
@@ -23,7 +26,7 @@ const GameUserSchema = new Schema(
     referredBy: { type: String },
     profileUrl: { type: String },
     deviceType: { type: String, default: 'Android' },
-    loginType: { type: String, default: 'phone' },
+    
     flags: {
       isOnline: { type: Number, default: 0 }
     },

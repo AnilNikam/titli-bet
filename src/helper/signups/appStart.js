@@ -93,6 +93,8 @@ module.exports.getUserDefaultFields = async (data, client) => {
     Iscom: data.Iscom ? 1 : 0,
     uniqueId: '',
     loginType: data.loginType,
+    facebookid:data.facebookid ? data.facebookid : "",
+    googleid : data.googleid ? data.googleid : "",
     avatar: data.avatar,
     chips: 20000,
     winningChips: 0,

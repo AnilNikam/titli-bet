@@ -55,15 +55,48 @@ const checkReferalOrCouponCode = async (requestData, socket) => {
   return true;
 };
 
+/*
+
+loginType :  ['Mobile', 'Guest', 'Facebook', 'Google']
+
+loginType :"Mobile" 
+mobileNumber:"",
+password: :"",
+
+Facebook
+facebookid:"",
+
+Google
+googleid:"",
+    
+
+*/
+
 const userLogin = async (requestData, socket) => {
-  if (requestData.mobileNumber.length !== 10) {
-    commandAcions.sendEvent(socket, CONST.LOGIN, requestData, false, 'Please check mobile Number!');
+  if (
+      (requestData.loginType == "Mobile" &&  requestData.mobileNumber.length !== 10) || 
+      (requestData.loginType == "Facebook" &&  requestData.facebookid == undefined) || 
+      (requestData.loginType == "Google" &&  requestData.googleid == undefined)
+  
+  ) {
+    commandAcions.sendEvent(socket, CONST.LOGIN, requestData, false, 'Please enter proper data!');
     return false;
   }
-
   let wh = {
     mobileNumber: requestData.mobileNumber,
   };
+
+  if(requestData.loginType == "Facebook"){
+    wh = {
+      facebookid: requestData.facebookid,
+    }
+  }else if(requestData.loginType == "Google"){
+    wh = {
+      googleid: requestData.googleid,
+    }
+  }
+
+  
   //  csl('F wh :', wh);
 
   let resp = await Users.findOne(wh, {});
@@ -83,7 +116,7 @@ const userLogin = async (requestData, socket) => {
 
 
   } else {
-    commandAcions.sendEvent(socket, CONST.LOGIN, requestData, false, 'Mobile number not register!');
+    commandAcions.sendEvent(socket, CONST.LOGIN, requestData, false, 'User not register!');
   }
   return true;
 };
@@ -187,13 +220,35 @@ const resendOTP = async (requestData_, socket) => {
  * @description Register user for New Game
  * @param {Object} requestBody
  * @returns {Object}{ status:0/1, message: '', data: Response }
+ * 
+ * loginType :"Mobile" 
+mobileNumber:"",
+password: :"",
+
+Facebook
+facebookid:"",
+
+Google
+googleid:"",
+
  */
 const registerUser = async (requestBody, socket) => {
   try {
     logger.info('Register User Request Body =>', requestBody);
-    const { mobileNumber, deviceId, isVIP } = requestBody;
+    const { mobileNumber,loginType,facebookid,googleid, deviceId, isVIP } = requestBody;
 
     let query = { mobileNumber: mobileNumber };
+
+    if(loginType == "Facebook"){
+      query = {
+        facebookid: facebookid,
+      }
+    }else if(loginType == "Google"){
+      query = {
+        googleid: googleid,
+      }
+    }
+
     let result = await Users.findOne(query, {});
     if (!result) {
 
