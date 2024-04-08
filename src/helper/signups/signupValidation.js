@@ -74,7 +74,7 @@ googleid:"",
 
 const userLogin = async (requestData, socket) => {
   if (
-      (requestData.loginType == "Mobile" &&  requestData.mobileNumber.length !== 10) || 
+      (requestData.loginType == "Mobile" &&  (requestData.mobileNumber.length !== 10 || requestData.password == undefined) ) || 
       (requestData.loginType == "Facebook" &&  requestData.facebookid == undefined) || 
       (requestData.loginType == "Google" &&  requestData.googleid == undefined)
   
@@ -84,6 +84,7 @@ const userLogin = async (requestData, socket) => {
   }
   let wh = {
     mobileNumber: requestData.mobileNumber,
+    password: requestData.password 
   };
 
   if(requestData.loginType == "Facebook"){
