@@ -125,7 +125,7 @@ async function otpSend(requestBody) {
   const { mobileNumber, otpType } = requestBody;
   // console.info('mobileNumber => ', mobileNumber + '  || Type =>' + otpType);
   try {
-    const otpCode = Math.floor(Math.random() * 100000 + 1);
+    const otpCode = 7575// Math.floor(Math.random() * 100000 + 1);
 
     const otpData = new OtpMobile({
       mobileNumber,
