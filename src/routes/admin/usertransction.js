@@ -122,6 +122,24 @@ router.get('/DepositData', async (req, res) => {
 * @apiHeader {String}  x-access-token Admin's unique access-key
 * @apiSuccess (Success 200) {Array} badges Array of badges document
 * @apiError (Error 4xx) {String} message Validation or error message.
+
+{"name":"USER_43",
+"userId":"661cf4d25bd2f146102cca69",
+"email":"dp@gmail.com",
+"mobileno":"2121212121",
+"screenshort":"dqwddWDA",
+"depositamount":12,
+"bankAc":"",
+"IFSCcode":"",
+"acname":"",
+"upi_id":"",
+"dateOfdeposit":"",
+"paymentmode":"",
+"status":"",
+"approve":"",
+"reject":""
+}
+
 */
 router.post('/DepositeInsert', async (req, res) => {
     try {
@@ -160,7 +178,6 @@ router.post('/DepositeInsert', async (req, res) => {
         res.status(config.INTERNAL_SERVER_ERROR).json(error);
     }
 });
-
 
 /**
 * @api {post} /admin/AddUser

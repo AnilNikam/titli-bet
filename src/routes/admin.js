@@ -28,7 +28,7 @@ router.use('/dashboard', authMiddleware, dashboard);
 router.use('/user', user);
 router.use('/agent',authMiddleware, agent);
 router.use('/shop',authMiddleware, shop);
-router.use('/usertransction', authMiddleware, usertransction);
+router.use('/usertransction', usertransction);
 router.use('/games', authMiddleware, games);
 router.use('/userhistory', authMiddleware, userhistory);
 router.use('/social', authMiddleware, social);
