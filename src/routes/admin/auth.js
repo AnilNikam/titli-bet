@@ -46,22 +46,14 @@ router.post('/login', async (req, res) => {
     // res.json(await mainCtrl.adminLogin(req.body));
     let data = {}
     console.log('req.body => ', req.body);
-    if (req.body.logintype == "Admin") {
+    
       data = await mainCtrl.adminLogin(req.body);
-      res.status(OK_STATUS).json(data);
-    } else if (req.body.logintype == "Agent") {
-      data = await mainCtrl.AgentLogin(req.body);
-      data.data.name = "Agent"
-      res.status(OK_STATUS).json(data);
-    } else if (req.body.logintype == "Shop") {
-      data = await mainCtrl.ShopLogin(req.body);
-      data.data.name = "Shop"
-      res.status(OK_STATUS).json(data);
-    } else {
-      res.status(BAD_REQUEST).json({ status: 0, message: 'Something went wrong' });
 
-    }
-    logger.info('data => ', data);
+      logger.info('data => ', data);
+      
+      res.status(OK_STATUS).json(data);
+   
+ 
 
   } catch (err) {
     logger.error('admin/auth.js login error => ', err);
