@@ -63,8 +63,6 @@ module.exports.
                     return false;
                 }
 
-                const playerInGame = await getPlayingUserInRound(tabInfo.playerInfo);
-
                 const response = {
                     pi: tabInfo.playerInfo,
                     spi: client.uid,

@@ -35,22 +35,22 @@ module.exports.gameTimerStart = async (tb) => {
         const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
         logger.info("gameTimerStart tabInfo :: ", tabInfo);
 
-        let roundTime = 4;
-        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.SORAT_GAME_START_TIMER, { timer: roundTime,history:tabInfo.history });
+        //  let roundTime = 3;
+        //  commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.SORAT_GAME_START_TIMER, { timer: roundTime,history:tabInfo.history});
 
-        let tbId = tabInfo._id;
-        let jobId = CONST.SORAT_GAME_START_TIMER + ":" + tbId;
-        let delay = commandAcions.AddTime(roundTime);
+         let tbId = tabInfo._id;
+        //  let jobId = CONST.SORAT_GAME_START_TIMER + ":" + tbId;
+        //  let delay = commandAcions.AddTime(roundTime);
 
-        const delayRes = await commandAcions.setDelay(jobId, new Date(delay));
+        //  const delayRes = await commandAcions.setDelay(jobId, new Date(delay));
 
-        this.startSORAT(tbId)
+        this.startSORAT(tbId,tabInfo.history)
     } catch (error) {
         logger.error("gameTimerStart.js error ->", error)
     }
 }
 
-module.exports.startSORAT = async (tbId) => {
+module.exports.startSORAT = async (tbId,winnerHistory) => {
 
     try {
 
@@ -100,7 +100,7 @@ module.exports.startSORAT = async (tbId) => {
         const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
         logger.info("startSORAT tabInfo :: ", tabInfo);
 
-        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: itemObject,timelimit:12});
+        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: itemObject,timelimit:12,history:winnerHistory});
 
         setTimeout(async ()=> {
             // Clear destory 

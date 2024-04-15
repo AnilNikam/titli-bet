@@ -115,7 +115,7 @@ module.exports.getUserDefaultFields = async (data, client) => {
   return setUserDetail;
 };
 
-module.exports.getReferralCode = async (length) => {
+module.exports.getReferralCode = (length) => {
   let result = '';
   let characters = 'qwertyuipasdfghkjlzxcvbnmQWERTYUIPASDFGHJKLZXCVBNM';
   for (let i = 0; i < length - 1; i++) {
