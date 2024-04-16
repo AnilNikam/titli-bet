@@ -85,7 +85,8 @@ module.exports.startSORAT = async (tbId,winnerHistory) => {
         let update = {
             $set: {
                 gameState: "StartSorat",
-                itemObject:itemObject
+                itemObject:itemObject,
+                "gameTimer.GST": new Date()
             },
             $push:{
                 "history": {

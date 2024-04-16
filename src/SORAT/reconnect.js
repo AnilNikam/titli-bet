@@ -84,12 +84,12 @@ module.exports.
 
                     let turnTime = new Date(tabInfo.gameTimer.GST);
                     let Gtime = turnTime.getSeconds();
-                    let diff = Gtime - time;
+                    let diff = time - Gtime ;
 
                     const responseRS = {
                         ...response,
                         currentTurnUserSeatIndex: tabInfo.turnSeatIndex,
-                        currentTurnTimer: diff,
+                        currentTurnTimer: 12-diff,
                     };
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRS);
                 } else if (tabInfo.gameState === CONST.SORAT_ROUND_START_TIMER) {
@@ -97,11 +97,11 @@ module.exports.
                     let time = currentDateTime.getSeconds();
                     let turnTime = new Date(tabInfo.gameTimer.GST);
                     let Gtime = turnTime.getSeconds();
-                    let diff = Gtime - time;
+                    let diff = time - Gtime;
 
                     const responseRST = {
                         ...response,
-                        timer: diff,
+                        timer: 12-diff,
                     };
 
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRST);
