@@ -82,7 +82,7 @@ module.exports.
                     let currentDateTime = new Date();
                     let time = currentDateTime.getSeconds();
 
-                    let turnTime = new Date(tabInfo.gameTimer.ttimer);
+                    let turnTime = new Date(tabInfo.gameTimer.GST);
                     let Gtime = turnTime.getSeconds();
                     let diff = Gtime - time;
 

@@ -23,7 +23,7 @@ module.exports.gameTimerStart = async (tb) => {
         let update = {
             $set: {
                 gameState: "SoratGameStartTimer",
-                "GameTimer.GST": new Date(),
+                "gameTimer.GST": new Date(),
                 "totalbet":0,
                 "playerInfo.$.selectObj":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 "isFinalWinner":false
