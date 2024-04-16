@@ -19,6 +19,10 @@ const userReconnect = async (payload, socket) => {
     const disconnTable = await findDisconnectTable(payload.playerId, SoratTables);
     logger.info('\n finded disconnected  -->', disconnTable);
 
+    if(disconnTable){
+      const plInfo1 = disconnTable.playerInfo[0];
+      socket.seatIndex = plInfo1.seatIndex
+    }
     // set in redis
     if (disconnTable) {
       try {
