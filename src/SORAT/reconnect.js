@@ -46,7 +46,7 @@ module.exports.
                 //console.log("client ",client)
                 //when player in table
                 const wh = {
-                    _id: MongoID(client.tbid),
+                    _id: MongoID(requestData.tableId),
                 };
 
                 const project = {};
@@ -67,9 +67,9 @@ module.exports.
 
                 const response = {
                     pi: tabInfo.playerInfo,
-                    spi: client.uid,
+                    spi: requestData.playerId,
                     gameState: tabInfo.gameState,
-                    ap: playerInGame.length,
+                    ap: tabInfo.activePlayer,
                     tableid: tabInfo._id,
                     gamePlayType: tabInfo.gamePlayType,
                     sceneName: CONST.GAMEPLAY,

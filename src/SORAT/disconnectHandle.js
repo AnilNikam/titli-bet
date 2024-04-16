@@ -92,8 +92,7 @@ module.exports.findDisconnectTable = async (userId, Table) => {
       
       console.log("tbInfo :::::::::::::::::::::::::::::",tbInfo)
 
-      console.log("SoratTables ",await SoratTables.findOne({}, project))
-
+  
 
       return tbInfo;
     } else {
