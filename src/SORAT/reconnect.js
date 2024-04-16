@@ -81,15 +81,13 @@ module.exports.
 
                 if (tabInfo.gameState === "StartSorat") {
                     let currentDateTime = new Date();
-                    let time = currentDateTime.getSeconds();
-
                     let turnTime = new Date(tabInfo.gameTimer.GST);
-                    let Gtime = turnTime.getSeconds();
-                    let diff = time - Gtime ;
+
+                    let diff = (currentDateTime - turnTime);
 
                     console.log("diff ",diff)
-                    console.log("time ",time)
-                    console.log("Gtime ",Gtime)
+                    console.log("currentDateTime ",currentDateTime)
+                    console.log("turnTime ",turnTime)
 
 
 
@@ -101,18 +99,17 @@ module.exports.
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRS);
                 } else if (tabInfo.gameState === CONST.SORAT_ROUND_START_TIMER) {
                     let currentDateTime = new Date();
-                    let time = currentDateTime.getSeconds();
                     let turnTime = new Date(tabInfo.gameTimer.GST);
-                    let Gtime = turnTime.getSeconds();
-                    let diff = time - Gtime;
+
+                    let diff = (currentDateTime - turnTime);
 
                     console.log("diff ",diff)
-                    console.log("time ",time)
-                    console.log("Gtime ",Gtime)
-                    
+                    console.log("currentDateTime ",currentDateTime)
+                    console.log("turnTime ",turnTime)
+
                     const responseRST = {
                         ...response,
-                        timer: diff,
+                        timer: 12-diff,
                     };
 
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRST);
