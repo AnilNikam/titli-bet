@@ -47,6 +47,7 @@ module.exports.
                 //when player in table
                 const wh = {
                     _id: MongoID(requestData.tableId),
+                    'playerInfo._id': MongoID(requestData.playerId),
                 };
 
                 const project = {};
