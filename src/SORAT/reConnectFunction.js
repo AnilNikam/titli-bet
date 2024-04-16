@@ -47,30 +47,37 @@ const userReconnect = async (payload, socket) => {
         logger.info('schedule USER Cancel JOB :--> ', cancelJobStatus, jobsId);
 
         //await rdClient.hmget(jobId.toString(), ['tableId', 'playerId', 'plseat'], async (err, res) => {
-          if (err) {
-            logger.error('hmget err  -->', err);
-          }
-          logger.info('res[1]  -->', res[1], ' \n res[0]  -->', res[0], '\n | socket Id ==>', socket.id);
-          if (payload.playerId === res[1]) {
-            socket.uid = `${payload.playerId}`;
-            socket.sck = socket.id;
-            socket.tbid = res[0];
-            socket.seatIndex = parseInt(res[2]);
-            socket.join(socket.tbid.toString());
-            await updateScoketId({ playerId: socket.uid, sck: socket.id }, disconnTable);
-            await reconnect(payload, socket);
-          } else {
-            logger.info('player id not matched');
-          }
-        //});
-        //await rdClient.hdel(jobId.toString(), ['tableId', 'playerId', 'plseat']);
-        return;
+          // if (err) {
+          //   logger.error('hmget err  -->', err);
+          // }
+          //logger.info('res[1]  -->', res[1], ' \n res[0]  -->', res[0], '\n | socket Id ==>', socket.id);
+        //   if (payload.playerId === res[1]) {
+        //     socket.uid = `${payload.playerId}`;
+        //     socket.sck = socket.id;
+        //     socket.tbid = res[0];
+        //     socket.seatIndex = parseInt(res[2]);
+        //     socket.join(payload.tableId.toString());
+        //     await updateScoketId({ playerId: socket.uid, sck: socket.id }, disconnTable);
+        //     await reconnect(payload, socket);
+        //   } else {
+        //     logger.info('player id not matched');
+        //   }
+        // //});
+        // //await rdClient.hdel(jobId.toString(), ['tableId', 'playerId', 'plseat']);
+        // return;
       } catch (err) {
         logger.info('disconnTable Error ', err);
       }
     } else {
       logger.info('table not found ===--==-==-- >');
     }
+
+    socket.uid = `${payload.playerId}`;
+    socket.sck = socket.id;
+    socket.tbid = payload.tableId;
+    
+    socket.join(payload.tableId.toString());
+    await updateScoketId({ playerId: socket.uid, sck: socket.id }, disconnTable);
     await reconnect(payload, socket);
   } catch (error) {
     logger.error('socketServer.js SEND_MESSAGE_TO_TABLE => ', error);
