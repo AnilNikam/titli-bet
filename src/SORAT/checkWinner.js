@@ -6,14 +6,14 @@ const checkUserCardActions = require("./checkUserCard");
 const gameFinishActions = require("./gameFinish");
 const logger = require("../../logger");
 
-const PlayingTables = require("../models/playingTables");
+const SoratTables = mongoose.model('soratTables');
 
 module.exports.autoShow = async (tb) => {
 
     const wh = {
         _id: MongoID(tb._id.toString())
     }
-    const tabInfo = await PlayingTables.findOne(wh, {}).lean();
+    const tabInfo = await SoratTables.findOne(wh, {}).lean();
 
     logger.info("autoShow wh tabInfo : ", wh, tabInfo);
     logger.info("autoShow condition 1: ", tabInfo.callFinalWinner);
@@ -33,7 +33,7 @@ module.exports.autoShow = async (tb) => {
     }
     logger.info("autoShow upWh updateData :: ", upWh, updateData);
 
-    const tbInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, { new: true });
+    const tbInfo = await SoratTables.findOneAndUpdate(upWh, updateData, { new: true });
     logger.info("autoShow tbInfo : ", tbInfo);
 
     let winners = await this.getWinner(tbInfo);
@@ -48,7 +48,7 @@ module.exports.winnercall = async (tb, isShow, showUserSeatIndex) => {
     const wh = {
         _id: MongoID(tb._id.toString())
     }
-    const tabInfo = await PlayingTables.findOne(wh, {}).lean();
+    const tabInfo = await SoratTables.findOne(wh, {}).lean();
 
     logger.info("winnercall wh tabInfo : ", wh, tabInfo);
     logger.info("winnercall condition 1: ", tabInfo.callFinalWinner);
@@ -68,7 +68,7 @@ module.exports.winnercall = async (tb, isShow, showUserSeatIndex) => {
     }
     logger.info("winnercall upWh updateData :: ", upWh, updateData);
 
-    const tbInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, { new: true });
+    const tbInfo = await SoratTables.findOneAndUpdate(upWh, updateData, { new: true });
     logger.info("winnercall tbInfo : ", tbInfo);
 
     let winners = await this.getWinner(tbInfo, isShow, showUserSeatIndex);

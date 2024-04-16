@@ -7,14 +7,16 @@ const { GetRandomString, socketUserRedis, } = require('../helper/socketFunctions
 const schedule = require('node-schedule');
 const mongoose = require('mongoose');
 const MongoID = mongoose.Types.ObjectId;
-const PlayingTables = mongoose.model('playingTables');
+const SoratTables = mongoose.model('soratTables');
 
 const userReconnect = async (payload, socket) => {
   try {
-    //logger.info('User Reconnect Payload ', payload, '\n<==== New Connected Socket id ===>', socket.id, '\n Table Id =>', socket.tbid, '\n Socket Id', socket);
+    logger.info('User Reconnect Payload ', payload, '\n<==== New Connected Socket id ===>', socket.id, '\n Table Id =>', socket.tbid, '\n Socket Id');
+    
+    socket.tbid = payload.tableId
 
-    const rdClient = createClient();
-    const disconnTable = await findDisconnectTable(payload.playerId, PlayingTables);
+    //const rdClient = createClient();
+    const disconnTable = await findDisconnectTable(payload.playerId, SoratTables);
     logger.info('\n finded disconnected  -->', disconnTable);
 
     // set in redis
@@ -26,15 +28,15 @@ const userReconnect = async (payload, socket) => {
         const plInfo = disconnTable.playerInfo[0];
         logger.info('\n plInfo  -->', plInfo, '\n disconnTable._id  -->', disconnTable._id + '\n plInfo._id  -->', plInfo._id);
 
-        const jobId = GetRandomString(6);
-        await rdClient.hmset(jobId.toString(), 'tableId', disconnTable._id.toString(), 'playerId', plInfo._id.toString(), 'plseat', plInfo.seatIndex);
+         const jobId = GetRandomString(6);
+        // await rdClient.hmset(jobId.toString(), 'tableId', disconnTable._id.toString(), 'playerId', plInfo._id.toString(), 'plseat', plInfo.seatIndex);
 
-        socketUserRedis({
-          userId: plInfo._id,
-          sckId: socket.id,
-        });
+        // socketUserRedis({
+        //   userId: plInfo._id,
+        //   sckId: socket.id,
+        // });
 
-        await rdClient.hmset(`socket-${plInfo._id.toString()}`, 'socketId', socket.id.toString(), 'userId', plInfo._id.toString());
+        //await rdClient.hmset(`socket-${plInfo._id.toString()}`, 'socketId', socket.id.toString(), 'userId', plInfo._id.toString());
 
         let jobsId = CONST.DISCONNECT + plInfo._id;
 
@@ -44,7 +46,7 @@ const userReconnect = async (payload, socket) => {
         const cancelJobStatus = schedule.cancelJob(jobsId);
         logger.info('schedule USER Cancel JOB :--> ', cancelJobStatus, jobsId);
 
-        await rdClient.hmget(jobId.toString(), ['tableId', 'playerId', 'plseat'], async (err, res) => {
+        //await rdClient.hmget(jobId.toString(), ['tableId', 'playerId', 'plseat'], async (err, res) => {
           if (err) {
             logger.error('hmget err  -->', err);
           }
@@ -60,8 +62,8 @@ const userReconnect = async (payload, socket) => {
           } else {
             logger.info('player id not matched');
           }
-        });
-        await rdClient.hdel(jobId.toString(), ['tableId', 'playerId', 'plseat']);
+        //});
+        //await rdClient.hdel(jobId.toString(), ['tableId', 'playerId', 'plseat']);
         return;
       } catch (err) {
         logger.info('disconnTable Error ', err);
@@ -88,7 +90,7 @@ const updateRejoinStatus = async (payload, table) => {
         'playerInfo.$': 1,
       };
 
-      let tabInfo = await PlayingTables.findOne(wh, project);
+      let tabInfo = await SoratTables.findOne(wh, project);
       logger.info('updateRejoinStatus tabInfo :: ', tabInfo);
 
       let upWh = {
@@ -100,7 +102,7 @@ const updateRejoinStatus = async (payload, table) => {
         ['playerInfo.$.rejoin']: true,
       };
 
-      tabInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, {
+      tabInfo = await SoratTables.findOneAndUpdate(upWh, updateData, {
         new: true,
       });
       logger.info('update rejoin user update table :: ', tabInfo);
@@ -127,7 +129,7 @@ const updateScoketId = async (payload, table) => {
         'playerInfo.$': 1,
       };
 
-      let tabInfo = await PlayingTables.findOne(wh, project);
+      let tabInfo = await SoratTables.findOne(wh, project);
       logger.info('updateRejoinStatus tabInfo :: ', tabInfo);
 
       let upWh = {
@@ -140,7 +142,7 @@ const updateScoketId = async (payload, table) => {
         ['playerInfo.$.playerSocketId']: sck,
       };
 
-      tabInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, {
+      tabInfo = await SoratTables.findOneAndUpdate(upWh, updateData, {
         new: true,
       });
       logger.info('updateScoketId table :: ', tabInfo);

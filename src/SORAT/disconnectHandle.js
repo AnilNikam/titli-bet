@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const MongoID = mongoose.Types.ObjectId;
-const PlayingTables = mongoose.model("playingTables");
-
+const SoratTables = mongoose.model('soratTables');
 
 
 const logger = require('../../logger');
@@ -20,7 +19,7 @@ module.exports.disconnectTableHandle = async (client) => {
         _id: MongoID(client.tbid),
       };
 
-      const tabInfo = await PlayingTables.findOne(whe, {}).lean();
+      const tabInfo = await SoratTables.findOne(whe, {}).lean();
       logger.info('Find Table when user Disconnect =>', tabInfo);
 
       if (tabInfo === null) return false;
@@ -36,7 +35,7 @@ module.exports.disconnectTableHandle = async (client) => {
           'playerInfo.$': 1,
         };
 
-        const tbInfo = await PlayingTables.findOne(wh, project);
+        const tbInfo = await SoratTables.findOne(wh, project);
         logger.info('check user rejoin status', tbInfo);
 
         if (tbInfo !== null && tabInfo.playerInfo[0].rejoin !== true) {
@@ -56,7 +55,7 @@ module.exports.disconnectTableHandle = async (client) => {
             ['playerInfo.$.rejoin']: false,
           };
 
-          let tabInfo = await PlayingTables.findOneAndUpdate(wh, updateData, {
+          let tabInfo = await SoratTables.findOneAndUpdate(wh, updateData, {
             new: true,
           });
 
@@ -84,7 +83,17 @@ module.exports.findDisconnectTable = async (userId, Table) => {
         'playerInfo.$': 1,
       };
 
-      const tbInfo = await Table.findOne(wh, project);
+      console.log("wh :::::::::::::::::::::::::::::",wh)
+
+
+      console.log("project :::::::::::::::::::::::::::::",project)
+
+      const tbInfo = await SoratTables.findOne(wh, project);
+      
+      console.log("tbInfo :::::::::::::::::::::::::::::",tbInfo)
+
+      console.log("SoratTables ",await SoratTables.findOne({}, project))
+
 
       return tbInfo;
     } else {

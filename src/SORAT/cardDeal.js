@@ -7,7 +7,8 @@ const CONST = require('../../constant');
 const logger = require("../../logger");
 const commandAcions = require("../helper/socketFunctions");
 const roundStartActions = require("./roundStart");
-const PlayingTables = mongoose.model("playingTables");
+const SoratTables = mongoose.model('soratTables');
+
 const _ = require("underscore")
 const cardLogic = require("./cardLogic");
 
@@ -16,7 +17,7 @@ module.exports.cardDealStart = async (tbid) => {
     let wh = {
         _id: tbid
     };
-    let tb = await PlayingTables.findOne(wh, {}).lean();
+    let tb = await SoratTables.findOne(wh, {}).lean();
     logger.info("collectBoot tb : ", tb);
 
     let cardDetails = this.getCards(tb.playerInfo);
@@ -33,7 +34,7 @@ module.exports.cardDealStart = async (tbid) => {
 
     logger.info("initRoundState update : ", update);
 
-    const tabInfo = await PlayingTables.findOneAndUpdate(wh, update, { new: true });
+    const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
     logger.info("findTableAndJoin tabInfo : ", tabInfo);
 
     const eventResponse = {
@@ -70,7 +71,7 @@ module.exports.setUserCards = async (cardsInfo, tb) => {
                 let uWh = { _id: MongoID(tb._id.toString()), "playerInfo.seatIndex": Number(playerInfo[i].seatIndex) }
                 logger.info("serUserCards uWh update ::", uWh, update)
 
-                await PlayingTables.updateOne(uWh, update);
+                await SoratTables.updateOne(uWh, update);
 
                 // commandAcions.sendDirectEvent(playerInfo[i].sck, CONST.USER_CARD , { cards : cardsInfo.cards[activePlayer] }); 
                 cardDealIndexs.push(Number(playerInfo[i].seatIndex))

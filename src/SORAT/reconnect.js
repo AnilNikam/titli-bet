@@ -8,8 +8,8 @@ const { sendDirectEvent, getPlayingUserInRound } = require('../helper/socketFunc
 const { filterBeforeSendSPEvent } = require('../helper/signups/appStart');
 
 const Users = mongoose.model('users');
-const PlayingTables = mongoose.model('playingTables');
 const MongoID = mongoose.Types.ObjectId;
+const SoratTables = mongoose.model('soratTables');
 
 module.exports.
     reconnect = async (requestData, client) => {
@@ -29,28 +29,30 @@ module.exports.
                     ...newData,
                 };
                 logger.info('Reconnect Final Data => ', finaldata);
-                let responseResult = await filterBeforeSendSPEvent(finaldata);
+                //let responseResult = await filterBeforeSendSPEvent(finaldata);
 
-                if (requestData.tableId == '') {
-                    const response = {
-                        login: true,
-                        ...responseResult,
-                        sceneName: CONST.DASHBOARD,
+                // if (requestData.tableId == '') {
+                //     const response = {
+                //         login: true,
+                //         ...responseResult,
+                //         sceneName: CONST.DASHBOARD,
 
-                    };
+                //     };
 
-                    sendDirectEvent(client.id.toString(), CONST.RECONNECT, response);
-                    return false;
-                }
+                //     sendDirectEvent(client.id.toString(), CONST.RECONNECT, response);
+                //     return false;
+                // }
 
-
+                //console.log("client ",client)
                 //when player in table
                 const wh = {
                     _id: MongoID(client.tbid),
                 };
 
                 const project = {};
-                const tabInfo = await PlayingTables.findOne(wh, project).lean();
+                const tabInfo = await SoratTables.findOne(wh, project).lean();
+                
+                console.log("tabInfo :::::::::::::::",tabInfo)
 
                 if (tabInfo === null) {
                     const response = {
@@ -73,7 +75,10 @@ module.exports.
                     sceneName: CONST.GAMEPLAY,
                 };
 
-                if (tabInfo.gameState === CONST.ROUND_STARTED) {
+                console.log("tabInfo ::::::::::::::: response ",response)
+
+
+                if (tabInfo.gameState === "StartSorat") {
                     let currentDateTime = new Date();
                     let time = currentDateTime.getSeconds();
 
@@ -100,7 +105,7 @@ module.exports.
                     };
 
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRST);
-                } else if (tabInfo.gameState === CONST.ROUND_END) {
+                } else if (tabInfo.gameState === "WinnerDecalre") {
                     // const scoreBoard = tabInfo.playersScoreBoard;
                     // let winnerViewResponse = winnerViewResponseFilter(scoreBoard);
 

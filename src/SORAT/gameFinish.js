@@ -2,7 +2,7 @@
 const mongoose = require("mongoose")
 const MongoID = mongoose.Types.ObjectId;
 
-const PlayingTables = mongoose.model("playingTables");
+const SoratTables = mongoose.model('soratTables');
 
 const gameTrackActions = require("./gameTrack");
 const commandAcions = require("../helper/socketFunctions");
@@ -28,7 +28,7 @@ module.exports.lastUserWinnerDeclareCall = async (tb) => {
     };
     logger.info("lastUserWinnerDeclareCall upWh updateData :: ", upWh, updateData);
 
-    const tabInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, { new: true });
+    const tabInfo = await SoratTables.findOneAndUpdate(upWh, updateData, { new: true });
     logger.info("lastUserWinnerDeclareCall tabInfo : ", tabInfo);
     let winner = {};
     for (var i = 0; i < tabInfo.playerInfo.length; i++) {
@@ -51,7 +51,7 @@ module.exports.lastUserWinnerDeclareCall = async (tb) => {
             "playerInfo.$.playStatus": "winner",
         }
     }
-    const tbInfo = await PlayingTables.findOneAndUpdate(dcUWh, up, { new: true });
+    const tbInfo = await SoratTables.findOneAndUpdate(dcUWh, up, { new: true });
     logger.info("lastUserWinnerDeclareCall tbInfo : ", tbInfo);
 
     await this.winnerDeclareCall([winner], tabInfo);
@@ -84,7 +84,7 @@ module.exports.winnerDeclareCall = async (winner, tabInfo) => {
         };
         logger.info("winnerDeclareCall upWh updateData :: ", upWh, updateData);
 
-        const tbInfo = await PlayingTables.findOneAndUpdate(upWh, updateData, { new: true });
+        const tbInfo = await SoratTables.findOneAndUpdate(upWh, updateData, { new: true });
         logger.info("winnerDeclareCall tbInfo : ", tbInfo);
 
         let winnerIndexs = [];

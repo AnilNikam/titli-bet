@@ -33,17 +33,17 @@ const RDS_SELECT =2
 const redis = require('redis');
 // logger.info('http.js \nSERVER_PORT', SERVER_PORT + ' \nSERVER_ID', SERVER_ID);
 
-(async () => {
-  rClient = (module.exports = redis.createClient(6379, RDS_HOST));
-  rClient.auth(RDS_PWD, function () { });
-  rClient.select(2);
-  // eslint-disable-next-line no-console
-  rClient.on('error', (err) => console.log('Redis Client Error', err));
+// (async () => {
+//   rClient = (module.exports = redis.createClient(6379, RDS_HOST));
+//   rClient.auth(RDS_PWD, function () { });
+//   rClient.select(2);
+//   // eslint-disable-next-line no-console
+//   rClient.on('error', (err) => console.log('Redis Client Error', err));
 
-  rClient.on('connect', () => {
-    console.log('Redis Client connected')
-  });
-})();
+//   rClient.on('connect', () => {
+//     console.log('Redis Client connected')
+//   });
+// })();
 
 const socket = require('./src/controller/socket-server');
 const logger = (module.exports = require('./logger'));

@@ -38,12 +38,13 @@ myIo.init = function (server) {
     io.on('connection', async (socket) => {
 
         try {
-            logger.info("Socket connected ===> ", socket.id);
+            console.log("Socket connected ===> ", socket.id);
             sendEvent(socket, CONST.DONE, {});
 
             socket.on('req', async (data) => {
                 const decryptObj = commonHelper.decrypt(data.payload);
                 const payload = JSON.parse(decryptObj);
+                
                 console.log("payload ::::::::::::::::", payload)
                 console.log("payload ::::::::::::::::", payload.eventName)
 
