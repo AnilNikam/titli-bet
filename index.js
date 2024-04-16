@@ -3,6 +3,7 @@ const fs = (module.exports = require('graceful-fs'));
 module.exports = require('https');
 const express = (module.exports = require('express'));
 // const { REDIS_HOST } = require('./config')
+const { REDIS_HOST, REDIS_PWD } = require('./config')
 
 const http = require('http');
 const path = require('path');
@@ -26,18 +27,21 @@ filesNames.forEach((file) => {
 const SERVER_ID = (module.exports = 'HTTPServer');
 const SERVER_PORT = (module.exports = process.env.PORT || 3000);
 
-// const RDS_HOST = "127.0.0.1";
-// const RDS_HOST = REDIS_HOST
-// const RDS_SELECT = 1
+const RDS_HOST = REDIS_HOST
+const RDS_PWD = REDIS_PWD
+const RDS_SELECT =2
 const redis = require('redis');
 // logger.info('http.js \nSERVER_PORT', SERVER_PORT + ' \nSERVER_ID', SERVER_ID);
 
 (async () => {
-  const rClient = (module.exports = redis.createClient());
+  rClient = (module.exports = redis.createClient(6379, RDS_HOST));
+  rClient.auth(RDS_PWD, function () { });
+  rClient.select(2);
   // eslint-disable-next-line no-console
-  rClient.on('error', (err) => logger.info('Redis Client Error', err));
+  rClient.on('error', (err) => console.log('Redis Client Error', err));
+
   rClient.on('connect', () => {
-    // logger.info('Redis Client connected')
+    console.log('Redis Client connected')
   });
 })();
 
