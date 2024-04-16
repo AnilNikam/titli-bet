@@ -12,7 +12,7 @@ const GameUserSchema = new Schema(
     name: { type: String },
     username: { type: String },
     deviceId: { type: String,  },
-    mobileNumber: { type: String, required: true },
+    mobileNumber: { type: String, default: ''  },
     uniqueId: { type: String },
     email: { type: String, default: '' },
     password: { type: String, default: '' },
