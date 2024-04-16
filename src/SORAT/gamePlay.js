@@ -194,7 +194,7 @@ module.exports.ClearBetSORAT = async (requestData, client) => {
         }
         
        
-        await walletActions.addWallet(client.uid, Number(playerInfo.totalbet), 4, "Sorat Clear Bet", tabInfo,client.id, client.seatIndex,"Sorat");
+        await walletActions.RefundaddWallet(client.uid, Number(playerInfo.totalbet), 4, "Sorat Clear Bet", tabInfo,client.id, client.seatIndex,"Sorat");
 
     
         const upWh = {
