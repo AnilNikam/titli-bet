@@ -138,7 +138,7 @@ module.exports.leaveTable = async (requestData, client) => {
             activePlayer: -1
         }
     }
-    if (tb.activePlayer == 2 && tb.gameState == "SoratGameStartTimer") {
+    if (tb.activePlayer == 0 && tb.gameState == "SoratGameStartTimer") {
         let jobId = CONST.GAME_START_TIMER + ":" + tb._id.toString();
         commandAcions.clearJob(jobId)
         updateData["$set"]["gameState"] = "";
@@ -170,22 +170,16 @@ module.exports.manageOnUserLeave = async (tb, client) => {
     const playerInGame = await roundStartActions.getPlayingUserInRound(tb.playerInfo);
     logger.info("manageOnUserLeave playerInGame : ", playerInGame);
 
-    if (tb.gameState == "RoundStated" || tb.gameState == "CollectBoot") {
-        if (playerInGame.length >= 2) {
-            await roundStartActions.nextUserTurnstart(tb, false);
-        } else if (playerInGame.length == 1) {
-            await gameFinishActions.lastUserWinnerDeclareCall(tb);
+    
+    if (playerInGame.length == 0 && tb.activePlayer == 0) {
+        let wh = {
+            _id: MongoID(tb._id.toString())
         }
-    } else if (["", "SoratGameStartTimer"].indexOf(tb.gameState) != -1) {
-        if (playerInGame.length == 0 && tb.activePlayer == 0) {
-            let wh = {
-                _id: MongoID(tb._id.toString())
-            }
-            await SoratTables.deleteOne(wh);
-        } else if (tb.activePlayer == 0) {
-            this.leaveSingleUser(tb._id)
-        }
+        await SoratTables.deleteOne(wh);
+    } else if (tb.activePlayer == 0) {
+        this.leaveSingleUser(tb._id)
     }
+    
 
 }
 

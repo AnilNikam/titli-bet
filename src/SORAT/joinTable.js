@@ -3,7 +3,7 @@ const MongoID = mongoose.Types.ObjectId;
 const GameUser = mongoose.model('users');
 const SoratTables = mongoose.model('soratTables');
 const { sendEvent, sendDirectEvent, AddTime, setDelay, clearJob } = require('../helper/socketFunctions');
-
+const _ = require("underscore")
 const gameStartActions = require("./gameStart");
 const CONST = require("../../constant");
 const logger = require("../../logger");
@@ -81,7 +81,7 @@ module.exports.createTable = async () => {
             activePlayer: 0,
             playerInfo: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
             gameState: "",
-            history:[],
+            history:_.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
             betamount:[10,50,100,200],
             TableObject:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         };

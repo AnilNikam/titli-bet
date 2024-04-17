@@ -96,7 +96,7 @@ module.exports.getUserDefaultFields = async (data, client) => {
     facebookid:data.facebookid ? data.facebookid : "",
     googleid : data.googleid ? data.googleid : "",
     avatar: data.avatar,
-    chips: 20000,
+    chips: 0,
     winningChips: 0,
     flags: {
       isOnline: 1, //is Online
