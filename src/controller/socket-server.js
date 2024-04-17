@@ -323,7 +323,7 @@ myIo.init = function (server) {
             /* Disconnect socket */
             socket.on('disconnect', async () => {
                 try {
-                    logger.info('\n<==== disconnect socket id ===>', socket.id, '\n Disconnect Table Id =>', socket.tbid);
+                   console.log('\n<==== disconnect socket id ===>', socket.id, '\n Disconnect Table Id =>', socket.tbid);
 
                     const playerId = socket.uid;
                     let jobId = CONST.DISCONNECT + playerId;
