@@ -94,7 +94,7 @@ module.exports.
                     const responseRS = {
                         ...response,
                         currentTurnUserSeatIndex: tabInfo.turnSeatIndex,
-                        currentTurnTimer: (12 - (diff/1000)),
+                        currentTurnTimer: (62 - (diff/1000)),
                     };
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRS);
                 } else if (tabInfo.gameState === CONST.SORAT_ROUND_START_TIMER) {
@@ -109,7 +109,7 @@ module.exports.
 
                     const responseRST = {
                         ...response,
-                        timer: (12-(diff/1000)),
+                        timer: (62-(diff/1000)),
                     };
 
                     sendDirectEvent(client.id.toString(), CONST.RECONNECT, responseRST);
