@@ -16,6 +16,8 @@ const userReconnect = async (payload, socket) => {
     const disconnTable = await findDisconnectTable(payload.playerId, PlayingTables);
     logger.info('\n finded disconnected  -->', disconnTable);
 
+    
+
     // set in redis
     if (disconnTable) {
       try {
