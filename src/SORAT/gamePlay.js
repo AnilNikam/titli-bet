@@ -86,7 +86,7 @@ module.exports.actionslot = async (requestData, client) => {
         let chalvalue = currentBet;
         updateData.$set["playerInfo.$.playStatus"] = "action"
     
-        let totalWallet = Number(UserInfo.chips) + Number(UserInfo.winningChips)
+        let totalWallet = Number(UserInfo.chips)
 
         if (Number(chalvalue) > Number(totalWallet)) {
             logger.info("action client.su ::", client.seatIndex);
@@ -263,7 +263,7 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
         
         console.log("chalvalue ",chalvalue)
 
-        let totalWallet = Number(UserInfo.chips) + Number(UserInfo.winningChips)
+        let totalWallet = Number(UserInfo.chips)
 
         if (Number(chalvalue) > Number(totalWallet)) {
             logger.info("DoubleBetSORAT client.su ::", client.seatIndex);
