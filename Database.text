@@ -1,0 +1,30 @@
+db.createUser(
+  {
+    user: "titlibet",
+    pwd: "xnRSbwA6Qr",
+    roles: [ { role: "readWrite", db: "titlibetdb" } ]
+  }
+)
+
+
+
+	db.createUser(
+	  {
+	    user: "Adminrummy",
+	    pwd: "xnRSbwA6Qr",
+	    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+	 }
+	)
+
+
+db.createUser(
+  {
+    user: "titlibet",
+    pwd: "xnRSbwA6Qr",
+    roles: [ { role: "userAdminAnyDatabase", db: "titlibetdb" }, "readWriteAnyDatabase" ]
+ }
+)
+
+
+0 * * * * echo 3 > /proc/sys/vm/drop_caches
+1 * * * * echo 1 > /proc/sys/vm/drop_caches

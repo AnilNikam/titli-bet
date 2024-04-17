@@ -7,6 +7,7 @@ const logger = require('../logger');
 const mongoDB = config.DATABASE;
 
 mongoose.connect(mongoDB, {
+  dbName: 'titlibetdb',
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
