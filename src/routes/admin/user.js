@@ -13,7 +13,7 @@ const mainCtrl = require('../../controller/adminController');
 const logger = require('../../../logger');
 const { registerUser } = require('../../helper/signups/signupValidation');
 const { getUserDefaultFields, saveGameUser } = require('../../helper/signups/appStart');
-
+const walletActions = require("../../SpinerGame/updateWallet");
 
 /**
 * @api {post} /admin/lobbies
@@ -27,13 +27,10 @@ router.get('/UserList', async (req, res) => {
     try {
         console.log('requet => ', req.query.Id);
         let userList = []
-        if (req.query.Id == "Admin") {
-
+        
             userList = await Users.find({}, { username: 1, id: 1, mobileNumber: 1, "counters.totalMatch": 1, profileUrl: 1, email: 1, uniqueId: 1, isVIP: 1, chips: 1, referralCode: 1, createdAt: 1, lastLoginDate: 1, status: 1 })
 
-        } else {
-            userList = await Users.find({ shopId: MongoID(req.query.Id) }, { username: 1, id: 1, mobileNumber: 1, "counters.totalMatch": 1, profileUrl: 1, email: 1, uniqueId: 1, isVIP: 1, chips: 1, referralCode: 1, createdAt: 1, lastLoginDate: 1, status: 1 })
-        }
+        
         logger.info('admin/dahboard.js post dahboard  error => ', userList);
 
         res.json({ userList });
@@ -88,7 +85,6 @@ router.post('/AddUser', async (req, res) => {
             password: req.body.password,
             isVIP: 1,
             country: req.body.country,
-            shopId: req.body.shopId,
             profileUrl: "upload/avatar/1.jpg"
         }
 
@@ -164,11 +160,27 @@ router.delete('/DeleteUser/:id', async (req, res) => {
 router.put('/addMoney', async (req, res) => {
     try {
         console.log("Add Money ", req.body)
-        //const RecentUser = //await Users.deleteOne({_id: new mongoose.Types.ObjectId(req.params.id)})
+
+        if (req.body.userId != undefined && req.body.type != undefined && req.body.money != undefined) {
+            const UserData = await Users.find({ _id: new mongoose.Types.ObjectId(req.body.userId) }, { sckId: 1 })
+            if (UserData != undefined && UserData[0].sckId != undefined) {
+                
+                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Credit",{}, UserData[0].sckId,-1,"SORAT");
+                    
+
+            }else{
+                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Credit",{},"",-1,"SORAT");
+                  
+            }
+
+            res.json({ status: "ok" });
+        } else {
+            console.log("false")
+            res.json({ status: false });
+        }
 
         logger.info('admin/dahboard.js post dahboard  error => ');
 
-        res.json({ status: "ok" });
     } catch (error) {
         logger.error('admin/dahboard.js post bet-list error => ', error);
         //res.send("error");
@@ -188,11 +200,28 @@ router.put('/addMoney', async (req, res) => {
 router.put('/deductMoney', async (req, res) => {
     try {
         console.log("deductMoney ", req.body)
-        //const RecentUser = //await Users.deleteOne({_id: new mongoose.Types.ObjectId(req.params.id)})
+        
+        if (req.body.userId != undefined && req.body.type != undefined && req.body.money != undefined) {
 
-        logger.info('admin/dahboard.js post dahboard  error => ');
+            const UserData = await Users.find({ _id: new mongoose.Types.ObjectId(req.body.userId) }, { sckId: 1, winningChips: 1 })
+            if (UserData != undefined && UserData[0].winningChips != undefined && UserData[0].winningChips < Number(req.body.money)) {
+                res.json({ status: false });
+                return false
+            }
 
-        res.json({ status: "ok" });
+            if (UserData != undefined && UserData[0].sckId != undefined) {
+                //await walletActions.deductWalletAdmin(req.body.userId, -Number(req.body.money), 4, req.body.type, {}, { id: UserData.sckId }, -1);
+                
+                await walletActions.deductWalletPayOut(req.body.userId, -Number(req.body.money), 4, "Debit",{},UserData[0].sckId,-1,"SORAT");
+            }else{
+                await walletActions.deductWalletPayOut(req.body.userId, -Number(req.body.money), 4, "Debit",{},"",-1,"SORAT");
+            }
+
+            res.json({ status: "ok" });
+        } else {
+            res.json({ status: false });
+        }
+
     } catch (error) {
         logger.error('admin/dahboard.js post bet-list error => ', error);
         //res.send("error");

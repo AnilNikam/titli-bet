@@ -5,8 +5,6 @@ const auth = require('./admin/auth');
 const bet = require('./admin/bet');
 const dashboard = require('./admin/dashboard');
 const user = require('./admin/user');
-const agent = require('./admin/agent');
-const shop = require('./admin/shop');
 
 
 const games = require('./admin/games');
@@ -26,8 +24,6 @@ router.use('/', auth);
 router.use('/lobbies', authMiddleware, bet);
 router.use('/dashboard', authMiddleware, dashboard);
 router.use('/user', user);
-router.use('/agent',authMiddleware, agent);
-router.use('/shop',authMiddleware, shop);
 router.use('/usertransction', usertransction);
 router.use('/games', authMiddleware, games);
 router.use('/userhistory', authMiddleware, userhistory);

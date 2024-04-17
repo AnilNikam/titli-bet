@@ -7,10 +7,6 @@ const CONST = require("../../constant");
 const logger = require("../../logger");
 const commandAcions = require("../helper/socketFunctions");
 const SoratTables = mongoose.model('soratTables');
-const roundStartActions = require("./roundStart");
-const gameFinishActions = require("./gameFinish");
-const checkWinnerActions = require("./checkWinner");
-const checkUserCardActions = require("./checkUserCard");
 
 const walletActions = require("../SpinerGame/updateWallet");
 
@@ -107,7 +103,9 @@ module.exports.actionslot = async (requestData, client) => {
 
 
         updateData.$inc["totalbet"] = chalvalue;
-        commandAcions.clearJob(tabInfo.job_id);
+        updateData.$inc["selectObj."+requestData.item] = chalvalue;
+
+        //commandAcions.clearJob(tabInfo.job_id);jobId
 
         const upWh = {
             _id: MongoID(client.tbid.toString()),
@@ -194,7 +192,7 @@ module.exports.ClearBetSORAT = async (requestData, client) => {
         }
         
        
-        await walletActions.RefundaddWallet(client.uid, Number(playerInfo.totalbet), 4, "Sorat Clear Bet", tabInfo,client.id, client.seatIndex,"Sorat");
+        await walletActions.RefundaddWallet(client.uid, Number(playerInfo.totalbet), 4, "Sorat Clear Bet", tabInfo,client.id, client.seatIndex,"SORAT");
 
     
         const upWh = {
@@ -301,7 +299,7 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
 
         updateData.$inc["totalbet"] = chalvalue;
         updateData.$set["turnDone"] = true;
-        commandAcions.clearJob(tabInfo.job_id);
+        //commandAcions.clearJob(tabInfo.job_id);
 
         const upWh = {
             _id: MongoID(client.tbid.toString()),

@@ -1,6 +1,17 @@
 
 const _ = require("underscore")
 
+
+
+var array = [1,1,-1,0,4]
+let indices = []
+
+
+
+
+console.log("indices ",array.indexOf(_.max(array)))
+
+return false
 function RobotAction(table,card){
     const playerInfo = table.playerInfo[table.turnSeatIndex]
 

@@ -83,7 +83,8 @@ module.exports.createTable = async () => {
             gameState: "",
             history:_.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
             betamount:[10,50,100,200],
-            TableObject:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            TableObject:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            selectObj:[0,0,0,0,0,0,0,0,0,0,0,0]
         };
         logger.info("createTable insertobj : ", insertobj);
 
@@ -132,7 +133,9 @@ module.exports.findEmptySeatAndUserSeat = async (table, client) => {
             status: "",
             playerStatus: "",
             selectObj: [
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                0,0,0,0,0, 
+                0,0,0,0,0,
+                0,0,0,0
             ], // Select object enter ,
             totalbet:0,
             turnMissCounter: 0,

@@ -10,7 +10,7 @@ const roundStartActions = require("./roundStart");
 const walletActions = require("../SpinerGame/updateWallet");
 const SoratTables = mongoose.model('soratTables');
 // const leaveTableActions = require("./leaveTable");
-
+const _ = require("underscore")
 module.exports.gameTimerStart = async (tb) => {
     try {
         logger.info("gameTimerStart tb : ", tb);
@@ -18,15 +18,16 @@ module.exports.gameTimerStart = async (tb) => {
 
         let wh = {
             _id: tb._id,
-            "playerInfo.seatIndex": {$exists:true}
+            "playerInfo.seatIndex": { $exists: true }
         }
         let update = {
             $set: {
                 gameState: "SoratGameStartTimer",
                 "gameTimer.GST": new Date(),
-                "totalbet":0,
-                "playerInfo.$.selectObj":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                "isFinalWinner":false
+                "totalbet": 0,
+                "playerInfo.$.selectObj": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "selectObj": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "isFinalWinner": false
             }
         }
         logger.info("gameTimerStart UserInfo : ", wh, update);
@@ -37,19 +38,19 @@ module.exports.gameTimerStart = async (tb) => {
         //  let roundTime = 3;
         //  commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.SORAT_GAME_START_TIMER, { timer: roundTime,history:tabInfo.history});
 
-         let tbId = tabInfo._id;
+        let tbId = tabInfo._id;
         //  let jobId = CONST.SORAT_GAME_START_TIMER + ":" + tbId;
         //  let delay = commandAcions.AddTime(roundTime);
 
         //  const delayRes = await commandAcions.setDelay(jobId, new Date(delay));
 
-        this.startSORAT(tbId,tabInfo.history)
+        this.startSORAT(tbId, tabInfo.history)
     } catch (error) {
         logger.error("gameTimerStart.js error ->", error)
     }
 }
 
-module.exports.startSORAT = async (tbId,winnerHistory) => {
+module.exports.startSORAT = async (tbId, winnerHistory) => {
 
     try {
 
@@ -65,60 +66,108 @@ module.exports.startSORAT = async (tbId,winnerHistory) => {
         //logger.info("startSORAT config.SORATLOGIC : ", config.SORATLOGIC);
         logger.info("startSORAT tb.totalbet : ", tb.totalbet);
 
-        // NORMAL 
-        let itemObject = tb.TableObject[getRandomInt(0,tb.TableObject.length-1)]
-
-        // if(CONST.SORATLOGIC == "Client"){ // Client SIDE
-        //     if(tb.totalbet >= 5){
-        //          Number = this.generateNumber()
-        //     }else if(tb.totalbet < 5){
-        //          Number = this.generateNumber()
-        //     }
-        // }else if(CONST.SORATLOGIC == "User"){  // User SIDE
-        //      Number = this.generateNumber()
-        // }   
-        console.log("itemObject ",itemObject)
-        
+       
         let wh = {
             _id: tbId
         }
         let update = {
             $set: {
                 gameState: "StartSorat",
-                itemObject:itemObject,
+                //itemObject:itemObject,
                 "gameTimer.GST": new Date()
             },
-            $push:{
-                "history": {
-                    $each: [itemObject],
-                    $slice: -15
-                }
-            }
+            // $push:{
+            //     "history": {
+            //         $each: [itemObject],
+            //         $slice: -15
+            //     }
+            // }
         }
         logger.info("startSORAT UserInfo : ", wh, update);
 
         const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
         logger.info("startSORAT tabInfo :: ", tabInfo);
 
-        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: itemObject,timelimit:60,history:winnerHistory});
+        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: "", timelimit: 60, history: winnerHistory });
 
-        setTimeout(async ()=> {
+        setTimeout(async () => {
             // Clear destory 
-            const tabInfonew = await SoratTables.findOneAndUpdate(wh, {
-                $set: {
-                    itemObject:""
-                }
-            }, { new: true });
 
-            this.winnerSorat(tabInfonew,itemObject);
-        },62000);
+            const Tabledata = await SoratTables.findOne({
+                _id: MongoID(tbId.toString()),
+            }, {})
+
+            // NORMAL 
+            let itemObject = Tabledata.TableObject[getRandomInt(0, Tabledata.TableObject.length - 1)]
+
+            let totalzerobetobject = []
+
+            console.log("Tabledata.selectObj", Tabledata.selectObj)
+
+
+            Tabledata.selectObj.forEach((value, index) => {
+                if (value === 0) {
+                    totalzerobetobject.push(index);
+                }
+            });
+
+            console.log("totalzerobetobject .SORAT ", totalzerobetobject)
+
+
+            let minimumbet = Tabledata.selectObj.indexOf(_.min(Tabledata.selectObj))
+            let maxmumbet = Tabledata.selectObj.indexOf(_.max(Tabledata.selectObj))
+
+            console.log("GAMELOGICCONFIG.SORAT ", GAMELOGICCONFIG.SORAT)
+
+            console.log("Tabledata.TableObject ", Tabledata.TableObject)
+
+            console.log("minimumbet ", minimumbet)
+            console.log("maxmumbet ", maxmumbet)
+
+            if (GAMELOGICCONFIG.SORAT == "Client") { // Client SIDE
+                if (totalzerobetobject.length > 0) {
+                    itemObject = Tabledata.TableObject[totalzerobetobject[getRandomInt(0, totalzerobetobject.length - 1)]]
+                } else {
+                    itemObject = Tabledata.TableObject[minimumbet]
+                }
+            } else if (GAMELOGICCONFIG.SORAT == "HighUser") {  // User SIDE
+                itemObject = Tabledata.TableObject[maxmumbet]
+            } else if (GAMELOGICCONFIG.SORAT == "LowUser") {
+                itemObject = Tabledata.TableObject[minimumbet]
+            }
+            console.log("itemObject:::::::::::: ", itemObject)
+
+            let wh = {
+                _id: tbId
+            }
+            let update = {
+                $set: {
+                    itemObject: ""
+                },
+                $push: {
+                    "history": {
+                        $each: [itemObject],
+                        $slice: -15
+                    }
+                }
+            }
+            logger.info("startSORAT UserInfo : ", wh, update);
+
+            const tabInfonew = await SoratTables.findOneAndUpdate(wh, update, { new: true });
+            logger.info("startSORAT tabInfonew :: ", tabInfonew);
+
+
+
+
+            this.winnerSorat(tabInfonew, itemObject);
+        }, 62000);
 
         //botLogic.PlayRobot(tabInfo,tabInfo.playerInfo,itemObject)
 
     } catch (error) {
         logger.error("SoratTables.js error ->", error)
     }
-}       
+}
 
 // Generate a random whole number between a specified range (min and max)
 function getRandomInt(min, max) {
@@ -127,7 +176,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-module.exports.winnerSorat = async (tabInfo, itemObject) =>{
+module.exports.winnerSorat = async (tabInfo, itemObject) => {
 
     try {
         logger.info("winnerSorat winner ::  -->", itemObject, tabInfo);
@@ -165,59 +214,59 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
         ]
 
         let itemIndex = tbInfo.TableObject.indexOf(itemObject)
-        
+
 
         for (let i = 0; i < tbInfo.playerInfo.length; i++) {
-            if( tbInfo.playerInfo[i].seatIndex != undefined){
-                var TotalWinAmount = 0 
-                if(tbInfo.playerInfo[i].selectObj[itemIndex] != 0){
+            if (tbInfo.playerInfo[i].seatIndex != undefined) {
+                var TotalWinAmount = 0
+                if (tbInfo.playerInfo[i].selectObj[itemIndex] != 0) {
                     winnerData.push({
-                        seatIndex:tbInfo.playerInfo[i].seatIndex,
-                        winAmount:tbInfo.playerInfo[i].selectObj[itemIndex] * 10,
-                        itemIndex:itemIndex
+                        seatIndex: tbInfo.playerInfo[i].seatIndex,
+                        winAmount: tbInfo.playerInfo[i].selectObj[itemIndex] * 10,
+                        itemIndex: itemIndex
                     })
 
                     TotalWinAmount = tbInfo.playerInfo[i].selectObj[itemIndex] * 10;
                 }
-                console.log("tbInfo.playerInfo[i].selectObj[12] ",tbInfo.playerInfo[i].selectObj[12])
-                console.log("tbInfo.playerInfo[i].selectObj[12]itemIndex  ",itemIndex)
+                console.log("tbInfo.playerInfo[i].selectObj[12] ", tbInfo.playerInfo[i].selectObj[12])
+                console.log("tbInfo.playerInfo[i].selectObj[12]itemIndex  ", itemIndex)
 
                 // Old  tem
-                if(tbInfo.playerInfo[i].selectObj[12] != 0 && [0,1,2,6,7,8].indexOf(itemIndex) != -1){
+                if (tbInfo.playerInfo[i].selectObj[12] != 0 && [0, 1, 2, 6, 7, 8].indexOf(itemIndex) != -1) {
                     winnerData.push({
-                        seatIndex:tbInfo.playerInfo[i].seatIndex,
-                        winAmount:tbInfo.playerInfo[i].selectObj[11] * 2,
-                        itemIndex:12
+                        seatIndex: tbInfo.playerInfo[i].seatIndex,
+                        winAmount: tbInfo.playerInfo[i].selectObj[11] * 2,
+                        itemIndex: 12
                     })
 
                     TotalWinAmount = TotalWinAmount + tbInfo.playerInfo[i].selectObj[12] * 2;
                 }
 
-                console.log("tbInfo.playerInfo[i].selectObj[13] ",tbInfo.playerInfo[i].selectObj[13])
-                console.log("tbInfo.playerInfo[i].selectObj[13]itemIndex  ",itemIndex)
+                console.log("tbInfo.playerInfo[i].selectObj[13] ", tbInfo.playerInfo[i].selectObj[13])
+                console.log("tbInfo.playerInfo[i].selectObj[13]itemIndex  ", itemIndex)
 
                 // Old  tem
-                if(tbInfo.playerInfo[i].selectObj[13] != 0 &&  [3,4,5,9,10,11].indexOf(itemIndex) != -1){
+                if (tbInfo.playerInfo[i].selectObj[13] != 0 && [3, 4, 5, 9, 10, 11].indexOf(itemIndex) != -1) {
                     winnerData.push({
-                        seatIndex:tbInfo.playerInfo[i].seatIndex,
-                        winAmount:tbInfo.playerInfo[i].selectObj[12] * 2,
-                        itemIndex:13
+                        seatIndex: tbInfo.playerInfo[i].seatIndex,
+                        winAmount: tbInfo.playerInfo[i].selectObj[12] * 2,
+                        itemIndex: 13
                     })
                     TotalWinAmount = TotalWinAmount + tbInfo.playerInfo[i].selectObj[13] * 2;
                 }
 
-                console.log("TotalWinAmount ",TotalWinAmount)
+                console.log("TotalWinAmount ", TotalWinAmount)
 
-                if(TotalWinAmount != 0){
-                
-                    await walletActions.addWallet(tbInfo.playerInfo[i]._id, Number(TotalWinAmount), 4, "Sorat Win",tbInfo,tbInfo.playerInfo[i].sck,tbInfo.playerInfo[i].seatIndex,"SORAT");
-                    
+                if (TotalWinAmount != 0) {
+
+                    await walletActions.addWallet(tbInfo.playerInfo[i]._id, Number(TotalWinAmount), 4, "Sorat Win", tbInfo, tbInfo.playerInfo[i].sck, tbInfo.playerInfo[i].seatIndex, "SORAT");
+
                     const upWh = {
                         _id: MongoID(tbInfo._id.toString()),
                         "playerInfo.seatIndex": Number(tbInfo.playerInfo[i].seatIndex)
                     }
-                    
-                    await SoratTables.findOneAndUpdate(upWh,{$inc:{"playerInfo.$.playerWinChips":TotalWinAmount}}, { new: true });
+
+                    await SoratTables.findOneAndUpdate(upWh, { $inc: { "playerInfo.$.playerWinChips": TotalWinAmount } }, { new: true });
 
                 }
             }
@@ -225,7 +274,7 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
         const playerInGame = await roundStartActions.getPlayingUserInRound(tbInfo.playerInfo);
         logger.info("getWinner playerInGame ::", playerInGame);
 
-        
+
 
         //const winnerTrack = await gameTrackActions.gamePlayTracks(winnerIndexs, tbInfo.gameTracks, tbInfo);
         //logger.info("winnerDeclareCall winnerTrack:: ", winnerTrack);
@@ -240,15 +289,15 @@ module.exports.winnerSorat = async (tabInfo, itemObject) =>{
             _id: MongoID(tbid.toString()),
         }, {})
         commandAcions.sendEventInTable(tbInfo._id.toString(), CONST.SORATWINNER, {
-            WinnerData:winnerData,
-            itemObject:itemObject,
-            playerInfo:tbData.playerInfo
+            WinnerData: winnerData,
+            itemObject: itemObject,
+            playerInfo: tbData.playerInfo
         });
 
-        
-        setTimeout(async ()=>{
+
+        setTimeout(async () => {
             await this.gameTimerStart(tbInfo);
-        },8000)
+        }, 8000)
     } catch (err) {
         logger.info("Exception  WinnerDeclareCall : 1 :: ", err)
     }
@@ -266,7 +315,8 @@ module.exports.deduct = async (tabInfo, playerInfo) => {
             if (playerInfo[i] != {} && typeof playerInfo[i].seatIndex != "undefined" && playerInfo[i].status == "play") {
                 seatIndexs.push(playerInfo[i].seatIndex);
 
-                await walletActions.deductWallet(playerInfo[i]._id,-Number(tabInfo.boot), 1, "Sorat Bet", tabInfo, playerInfo[i].sck, playerInfo[i].seatIndex);
+
+                await walletActions.deductWallet(playerInfo[i]._id, -Number(tabInfo.boot), 1, "Sorat Bet", tabInfo, playerInfo[i].sck, playerInfo[i].seatIndex, "SORAT");
 
                 let update = {
                     $inc: {
