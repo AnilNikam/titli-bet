@@ -17,9 +17,9 @@ const userDepositSchema = new Schema({
     upi_id:{ type: String, default: "" },
     dateOfdeposit:{ type: Date },
     paymentmode:{ type: String, default: "" },
-    status:{ type: String, default: "" },
-    approve:{ type: String, default: "" },
-    reject:{ type: String, default: "" },
+    status:{ type: Number, default: -1 },
+    approve:{ type: Number, default: 0 },
+    reject:{ type: Number, default: 0 },
 }, { versionKey: false });
 
 module.exports = mongoose.model(collectionName, userDepositSchema, collectionName);

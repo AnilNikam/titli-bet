@@ -19,8 +19,8 @@ const userPayoutSchema = new Schema({
     dateOfpayout:{ type: Date },
     paymentmode:{ type: String, default: "" },
     status:{ type: Number, default: -1 },
-    approve:{ type: String, default: "" },
-    reject:{ type: String, default: "" },
+    approve:{ type: Number, default: 0 },
+    reject:{ type: Number, default: 0 },
 }, { versionKey: false });
 
 module.exports = mongoose.model(collectionName, userPayoutSchema, collectionName);

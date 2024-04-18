@@ -21,16 +21,16 @@ const Userpayout = mongoose.model('userpayout');
 */
 router.get('/DepositList', async (req, res) => {
     try {
-        //console.info('requet => ', req);
+        console.info('requet => ', req.body);
 
-        const DepositeList = await Userdeposit.find({ approve: 0, reject: 0 }, {
+        const DepositeList = await Userdeposit.find({status: -1  }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
 
-        //logger.info('admin/dahboard.js post dahboard  error => ', DepositeList);
+        console.log('DepositeList', DepositeList);
 
-        res.json({ DepositeList:[] });
+        res.json({ DepositeList:DepositeList });
     } catch (error) {
         logger.error('admin/dahboard.js post bet-list error => ', error);
         res.status(config.INTERNAL_SERVER_ERROR).json(error);
@@ -49,7 +49,7 @@ router.get('/AcceptList', async (req, res) => {
     try {
         //console.info('requet => ', req);
 
-        const AcceptList = await Userdeposit.find({ approve: 1, reject: 0 }, {
+        const AcceptList = await Userdeposit.find({ status: 1  }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
@@ -76,7 +76,7 @@ router.get('/RejectList', async (req, res) => {
     try {
         //console.info('requet => ', req);
 
-        const RejectList = await Userdeposit.find({ approve: 0, reject: 1 }, {
+        const RejectList = await Userdeposit.find({ status: 0 }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
