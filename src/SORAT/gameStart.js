@@ -147,7 +147,7 @@ module.exports.startSORAT = async (tbId, winnerHistory) => {
                 $push: {
                     "history": {
                         $each: [itemObject],
-                        $slice: -15
+                        $slice: -50
                     }
                 }
             }

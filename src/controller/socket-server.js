@@ -174,7 +174,10 @@ myIo.init = function (server) {
                     }   
 
                     
-
+                    case CONST.GETHISTORYSORAT: {
+                        await gamePlayActionsSORAT.GETHISTORYSORAT(payload.data, socket);
+                        break;
+                    }   
 
                     case CONST.LEAVETABLESORAT: {
                         await gamePlayActionsSORAT.leaveTable(payload.data, socket);

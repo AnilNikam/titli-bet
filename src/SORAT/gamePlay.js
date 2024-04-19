@@ -323,3 +323,35 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
         logger.info("Exception action : ", e);
     }
 }
+
+
+module.exports.GETHISTORYSORAT = async (requestData, client) => {
+    try {
+        logger.info("GETHISTORYSORAT requestData : ", requestData);
+        if (typeof client.tbid == "undefined" || typeof client.uid == "undefined") {
+            commandAcions.sendDirectEvent(client.sck, CONST.GETHISTORYSORAT, requestData, false, "User session not set, please restart game!");
+            return false;
+        }
+
+        const wh = {
+            _id: MongoID(client.tbid.toString())
+        }
+        const project = {
+            history:1
+        }
+        const tabInfo = await SoratTables.findOne(wh, project).lean();
+        logger.info("GETHISTORYSORAT tabInfo : ", tabInfo);
+
+        if (tabInfo == null) {
+            logger.info("GETHISTORYSORAT user not turn ::", tabInfo);
+           
+            return false
+        }
+       
+        commandAcions.sendEvent(client, CONST.GETHISTORYSORAT, {History:tabInfo.history}, false, "");
+
+        return true;
+    } catch (e) {
+        logger.info("Exception action : ", e);
+    }
+}

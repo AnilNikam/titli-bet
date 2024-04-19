@@ -75,6 +75,7 @@ const CONST = {
   LEAVETABLESORAT:"LEAVETABLESORAT",
   ClearBetSORAT: "ClearBetSORAT",
   DoubleBetSORAT:"DoubleBetSORAT",
+  GETHISTORYSORAT:"GETHISTORYSORAT",
   //===================================================
 
 
