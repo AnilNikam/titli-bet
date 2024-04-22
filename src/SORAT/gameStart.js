@@ -88,7 +88,7 @@ module.exports.startSORAT = async (tbId, winnerHistory) => {
         const tabInfo = await SoratTables.findOneAndUpdate(wh, update, { new: true });
         logger.info("startSORAT tabInfo :: ", tabInfo);
 
-        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: "", timelimit: 30, History: winnerHistory });
+        commandAcions.sendEventInTable(tabInfo._id.toString(), CONST.STARTSORAT, { itemObject: "", timelimit: 20, History: winnerHistory });
 
         setTimeout(async () => {
             // Clear destory 
@@ -160,7 +160,7 @@ module.exports.startSORAT = async (tbId, winnerHistory) => {
 
 
             this.winnerSorat(tabInfonew, itemObject);
-        }, 32000);
+        }, 22000);
 
         //botLogic.PlayRobot(tabInfo,tabInfo.playerInfo,itemObject)
 
