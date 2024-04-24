@@ -61,15 +61,15 @@ module.exports.findTable = async (client) => {
 
 module.exports.getBetTable = async () => {
     logger.info("getBetTable  : ");
-    let wh = {
-        activePlayer: { $gte: 1}
-    }
-    logger.info("getBetTable wh : ", JSON.stringify(wh));
-    let tableInfo = await SoratTables.find(wh, {}).sort({ activePlayer: 1 }).lean();
+    // let wh = {
+    //     activePlayer: { $gte: 1}
+    // }
+    // logger.info("getBetTable wh : ", JSON.stringify(wh));
+    // let tableInfo = await SoratTables.find(wh, {}).sort({ activePlayer: 1 }).lean();
 
-    if (tableInfo.length > 0) {
-        return tableInfo[0];
-    }
+    // if (tableInfo.length > 0) {
+    //     return tableInfo[0];
+    // }
     let table = await this.createTable({});
     return table;
 }
@@ -79,7 +79,7 @@ module.exports.createTable = async () => {
         let insertobj = {
             gameId: "",
             activePlayer: 0,
-            playerInfo: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+            playerInfo: [{}],
             gameState: "",
             history:_.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
