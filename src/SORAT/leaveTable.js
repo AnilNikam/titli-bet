@@ -100,8 +100,8 @@ const SoratTables = mongoose.model('soratTables');
 
 module.exports.leaveTable = async (requestData, client) => {
     var requestData = (requestData != null) ? requestData : {}
-    console.log("leaveTable ",requestData)
-    console.log("client ",client)
+    //console.log("leaveTable ",requestData)
+    //console.log("client ",client)
 
     if (typeof client.tbid == "undefined" || typeof client.uid == "undefined" || typeof client.seatIndex == "undefined") {
         commandAcions.sendDirectEvent(client.sck, CONST.LEAVETABLESORAT, requestData, false, "User session not set, please restart game!");

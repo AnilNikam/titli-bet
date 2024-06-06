@@ -138,7 +138,7 @@ router.put('/gameLogicSet', async (req, res) => {
         console.info('requet => ', req.body);
         // console.log("req.body.gamelogic", CONST.AVIATORLOGIC)
 
-        console.log("dddddddddddddddddddd 1", process.env.AVIATORLOGIC)
+        console.log("dddddddddddddddddddd 1", GAMELOGICCONFIG.SORAT)
 
         console.log("req.body.game.gamename  1", req.body.game.gameName )
       
@@ -255,7 +255,9 @@ router.get('/getgamelogic', async (req, res) => {
 
         console.log("dddddddddddddddddddd 1", process.env.AVIATORLOGIC)
 
-        console.log("req.query.gameName", req.query.gamename )
+        console.log("req.query.gameName", req.query.gamename)
+        
+        
         //"SORAT":"Client","SPIN":"Normal","":"","":"","":"","":"",
         if (req.query.gamename == "SORAT") {
           
@@ -290,8 +292,7 @@ router.get('/getgamelogic', async (req, res) => {
             res.json({ logic: "" });
         }
 
-        logger.info('admin/dahboard.js post dahboard  error => ', CONST);
-
+        
         
     } catch (error) {
         logger.error('admin/dahboard.js post bet-list error => ', error);
@@ -316,8 +317,6 @@ router.put('/GameComSet', async (req, res) => {
     try {
         console.info('requet => ', req.body);
         // console.log("req.body.gamelogic", CONST.Commission)
-
-        console.log("dddddddddddddddddddd 1", process.env.Commission)
 
         GAMELOGICCONFIG.AdminCommission = parseInt(req.body.selectedcom)
         GAMELOGICCONFIG.AgentCommission = parseInt(req.body.agentselectedcom)

@@ -104,20 +104,24 @@ module.exports.startSORAT = async (tbId, winnerHistory) => {
             let itemObject = Tabledata.TableObject[getRandomInt(0, Tabledata.TableObject.length - 1)]
 
             let totalzerobetobject = []
-
+            let nonZeroNumbers = []
             console.log("Tabledata.selectObj", Tabledata.selectObj)
 
 
             Tabledata.selectObj.forEach((value, index) => {
                 if (value === 0) {
                     totalzerobetobject.push(index);
+                } else {
+                    nonZeroNumbers.push(value)
                 }
             });
 
+          
+
             console.log("totalzerobetobject .SORAT ", totalzerobetobject)
 
-
-            let minimumbet = Tabledata.selectObj.indexOf(_.min(Tabledata.selectObj))
+            //_.min(Tabledata.selectObj)
+            let minimumbet = Tabledata.selectObj.indexOf(_.min(nonZeroNumbers))
             let maxmumbet = Tabledata.selectObj.indexOf(_.max(Tabledata.selectObj))
 
             console.log("GAMELOGICCONFIG.SORAT ", GAMELOGICCONFIG.SORAT)
