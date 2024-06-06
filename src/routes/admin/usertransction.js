@@ -25,7 +25,7 @@ router.get('/DepositList', async (req, res) => {
 
         const DepositeList = await Userdeposit.find({status: -1  }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
-            acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
+            acname: 1, UTR: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
 
         console.log('DepositeList', DepositeList);
@@ -51,7 +51,7 @@ router.get('/AcceptList', async (req, res) => {
 
         const AcceptList = await Userdeposit.find({ status: 1  }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
-            acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
+            acname: 1, UTR: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
 
         logger.info('admin/dahboard.js post dahboard  error => ', AcceptList);
@@ -78,7 +78,7 @@ router.get('/RejectList', async (req, res) => {
 
         const RejectList = await Userdeposit.find({ status: 0 }, {
             name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, depositamount: 1, bankAc: 1, IFSCcode: 1,
-            acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
+            acname: 1, UTR: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfdeposit: 1
         })
 
         logger.info('admin/dahboard.js post dahboard  error => ', RejectList);
@@ -143,25 +143,25 @@ router.get('/DepositData', async (req, res) => {
 */
 router.post('/DepositeInsert', async (req, res) => {
     try {
-        console.log("req ", req.body)
+        console.log("req :::::::::::::::::::::", req)
         //currently send rendom number and generate 
         let response = {
             name: req.body.name,
             userId: req.body.userId,
             email: req.body.email,
             mobileno: req.body.mobileno,
-            screenshort: req.body.screenshort,
+            UTR: req.body.UTR,
+            screenshort: "upload/deposite/"+req.body.screenshort,
             depositamount: req.body.depositamount,
             bankAc: req.body.bankAc,
             IFSCcode: req.body.IFSCcode,
             acname: req.body.acname,
             upi_id: req.body.upi_id,
             dateOfdeposit: new Date(),
-            paymentmode: req.body.paymentmode,
-            status: req.body.status,
-            approve: req.body.approve,
-            reject: req.body.reject
+            paymentmode: req.body.paymentmode
         }
+
+        console.log("req response :::::::::::::::::::::",response)
 
         let RecentUser = await Userdeposit.create(response)
 
@@ -204,7 +204,7 @@ router.post('/UploadScreenShort', upload.single('image'), async (req, res) => {
         console.log("(req.file ", req.file)
         if (req.file.path != 'undefined' && req.file.path != '' && req.file.path != null) {
 
-            res.json({ flag: true, path: req.file.path.substr(7) });
+            res.json({ flag: true, path: req.file.filename });
         } else {
             res.json({ flag: false, path: "" });
         }
@@ -286,7 +286,7 @@ router.get('/PayoutList', async (req, res) => {
         console.log('PayoutList requet => ', req);
 
         const PayoutList = await Userpayout.find({ status: -1 }, {
-            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutamount: 1, bankAc: 1, IFSCcode: 1,
+            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutAmount: 1, bankAcNum: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, dateOfpayout: 1, paymentmode: 1, status: 1, approve: 1, reject: 1
         })
 
@@ -312,7 +312,7 @@ router.get('/PayoutAcceptList', async (req, res) => {
         console.log('PayoutAcceptList requet => ');
 
         const AcceptList = await Userpayout.find({ status: 1 }, {
-            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutamount: 1, bankAc: 1, IFSCcode: 1,
+            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutAmount: 1, bankAcNum: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfpayout: 1
         })
 
@@ -342,7 +342,7 @@ router.get('/PayoutRejectList', async (req, res) => {
         console.log('PayoutRejectList requet => ', req);
 
         const RejectList = await Userpayout.find({ status: 0 }, {
-            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutamount: 1, bankAc: 1, IFSCcode: 1,
+            name: 1, userId: 1, email: 1, "mobileno": 1, screenshort: 1, payoutAmount: 1, bankAcNum: 1, IFSCcode: 1,
             acname: 1, upi_id: 1, paymentmode: 1, status: 1, approve: 1, reject: 1, dateOfpayout: 1
         })
 
@@ -367,22 +367,20 @@ router.get('/PayoutRejectList', async (req, res) => {
 router.post('/PayoutInsert', async (req, res) => {
     try {
         console.log("req ", req.body)
-        //currently send rendom number and generate 
+        //currently send rendom number and generate
+
         let response = {
             name: req.body.name,
             userId: req.body.userId,
             email: req.body.email,
             mobileno: req.body.mobileno,
-            depositamount: req.body.depositamount,
-            bankAc: req.body.bankAc,
+            payoutAmount: req.body.depositamount,
+            bankAcNum: req.body.bankAc,
             IFSCcode: req.body.IFSCcode,
             acname: req.body.acname,
             upi_id: req.body.upi_id,
             dateOfpayout: new Date(),
-            paymentmode: req.body.paymentmode,
-            status: req.body.status,
-            approve: req.body.approve,
-            reject: req.body.reject
+            paymentmode: req.body.paymentmode
         }
 
         let RecentUser = await Userpayout.create(response)
@@ -451,7 +449,7 @@ router.post('/UploadScreenShortPayOut', upload.single('image'), async (req, res)
         console.log("(req.file ", req.file)
         if (req.file.path != 'undefined' && req.file.path != '' && req.file.path != null) {
 
-            res.json({ flag: true, path: req.file.path.substr(7) });
+            res.json({ flag: true, path: req.file.filename });
         } else {
             res.json({ flag: false, path: "" });
         }

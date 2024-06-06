@@ -46,7 +46,7 @@ module.exports.
                 //console.log("client ",client)
                 //when player in table
                 const wh = {
-                    _id: MongoID(requestData.tableId),
+                    //_id: MongoID(requestData.tableId),
                     'playerInfo._id': MongoID(requestData.playerId),
                 };
 

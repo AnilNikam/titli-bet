@@ -9,6 +9,9 @@ const logger = require("../../logger");
 const roundStartActions = require("./roundStart");
 const walletActions = require("../SpinerGame/updateWallet");
 const SoratTables = mongoose.model('soratTables');
+
+
+const SoratUserHistory = mongoose.model('SoratUserHistory');
 // const leaveTableActions = require("./leaveTable");
 const _ = require("underscore")
 module.exports.gameTimerStart = async (tb) => {
@@ -269,6 +272,20 @@ module.exports.winnerSorat = async (tabInfo, itemObject) => {
                     await SoratTables.findOneAndUpdate(upWh, { $inc: { "playerInfo.$.playerWinChips": TotalWinAmount } }, { new: true });
 
                 }
+
+
+                let insertobj = {
+                    userId: tbInfo.playerInfo[i]._id.toString(),
+                    ballposition: itemIndex,
+                    beforeplaypoint: tbInfo.playerInfo[i].coins +  tbInfo.playerInfo[i].totalbet,
+                    play: tbInfo.playerInfo[i].totalbet,
+                    won: TotalWinAmount,
+                    afterplaypoint: tbInfo.playerInfo[i].coins + TotalWinAmount,
+                    uuid: tbInfo.gameId
+                };
+                console.log("SoratUserHistory ", insertobj)
+                await SoratUserHistory.create(insertobj);
+
             }
         }
         const playerInGame = await roundStartActions.getPlayingUserInRound(tbInfo.playerInfo);

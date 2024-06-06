@@ -9,6 +9,7 @@ const userDepositSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: GameUser },
     email:{ type: String, default: "" },
     mobileno: { type: String, default: "" },
+    UTR: { type: String, default: "" },
     screenshort:{ type: String, default: "" },
     depositamount:{ type: Number, default: 0 },
     bankAc:{ type: String, default: "" },

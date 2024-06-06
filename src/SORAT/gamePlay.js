@@ -103,7 +103,8 @@ module.exports.actionslot = async (requestData, client) => {
 
 
         updateData.$inc["totalbet"] = chalvalue;
-        updateData.$inc["selectObj."+requestData.item] = chalvalue;
+        updateData.$inc["selectObj." + requestData.item] = chalvalue;
+        updateData.$inc["playerInfo.$.coins"] = -chalvalue;
 
         //commandAcions.clearJob(tabInfo.job_id);jobId
 
@@ -187,7 +188,9 @@ module.exports.ClearBetSORAT = async (requestData, client) => {
                 
             },
             $inc:{
-                "totalbet":-Number(playerInfo.totalbet)
+                "totalbet": -Number(playerInfo.totalbet),
+                "playerInfo.$.coins":Number(playerInfo.totalbet)
+               
             }
         }
         
@@ -295,7 +298,7 @@ module.exports.DoubleBetSORAT = async (requestData, client) => {
 
 
         updateData.$inc["playerInfo.$.totalbet"] = chalvalue;
-
+        updateData.$inc["playerInfo.$.coins"] = -chalvalue;
 
         updateData.$inc["totalbet"] = chalvalue;
         updateData.$set["turnDone"] = true;

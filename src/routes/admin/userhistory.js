@@ -11,6 +11,7 @@ const logger = require('../../../logger');
 
 
 const UserWalletTracks = mongoose.model('userWalletTracks');
+const SoratUserHistory = mongoose.model('SoratUserHistory');
 
 
 /**
@@ -348,14 +349,11 @@ router.get('/SoratGameHistory', async (req, res) => {
     try {
         console.info('requet => ', req.query);
 
-        const rouletteHistoryData = []
+        const tabInfo = await SoratUserHistory.find({}, {}).sort({createdAt:-1});
+
+        logger.info('admin/dahboard.js post dahboard  error => ', tabInfo);
         
-        // await GameHistory.find({ userId: MongoID(req.query.userId), "game": "SORAT" },
-        // { DateTime: 1, userId: 1, Name: 1, PhoneNumber: 1, RoomId: 1, Amount: 1, Type: 1, game: 1 }).sort({ DateTime: -1 })
-
-        logger.info('admin/dahboard.js post dahboard  error => ', rouletteHistoryData);
-
-        res.json({ gameHistoryData: rouletteHistoryData });
+        res.json({ gameHistoryData: tabInfo });
     } catch (error) {
         logger.error('admin/dahboard.js post bet-list error => ', error);
         res.status(config.INTERNAL_SERVER_ERROR).json(error);
