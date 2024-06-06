@@ -150,7 +150,8 @@ module.exports.deductWallet = async (id, deductChips, tType, t, tbInfo, client, 
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:1
         });
 
         if (typeof tbInfo != "undefined" && tbInfo != null && typeof tbInfo._id != "undefined" && typeof tbInfo.gt != "undefined" && tbInfo.gt == "Points Rummy") {
@@ -292,7 +293,8 @@ module.exports.addWallet = async (id, added_chips, tType, t, tbInfo, client, sea
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:0
         });
 
         if (typeof tbInfo != "undefined" && tbInfo != null && typeof tbInfo._id != "undefined") {
