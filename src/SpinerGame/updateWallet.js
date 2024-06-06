@@ -163,7 +163,8 @@ module.exports.deductWallet = async (id, deductChips, tType, t, tbInfo, client, 
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:1
         });
 
 
@@ -293,7 +294,8 @@ module.exports.RefundaddWallet = async (id, added_chips, tType, t, tbInfo, clien
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:0
         });
 
         return totalRemaningAmount;
@@ -412,7 +414,8 @@ module.exports.addWallet = async (id, added_chips, tType, t, tbInfo, client, sea
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:0
         });
 
         // if (typeof tbInfo != "undefined" && tbInfo != null && typeof tbInfo._id != "undefined") {
@@ -695,7 +698,8 @@ module.exports.deductWalletPayOut = async (id, added_chips, tType, t, tbInfo, cl
             chips: upReps.chips,
             totalWallet: totalRemaningAmount,
             msg: t,
-            seatIndex: seatIndex
+            seatIndex: seatIndex,
+            deduct:1
         });
 
         // if (typeof tbInfo != "undefined" && tbInfo != null && typeof tbInfo._id != "undefined") {
