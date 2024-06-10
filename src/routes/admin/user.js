@@ -165,18 +165,17 @@ router.put('/addMoney', async (req, res) => {
             const UserData = await Users.find({ _id: new mongoose.Types.ObjectId(req.body.userId) }, { sckId: 1 })
             if (UserData != undefined && UserData[0].sckId != undefined) {
                 
-                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Credit",{}, UserData[0].sckId,-1,"SORAT");
+                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Admin Addeed Chips",{}, UserData[0].sckId,-1,"SORAT");
                     
-
             }else{
-                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Credit",{},"",-1,"SORAT");
+                await walletActions.RefundaddWallet(req.body.userId, Number(req.body.money), 4, "Admin Addeed Chips",{},"",-1,"SORAT");
                   
             }
 
-            res.json({ status: "ok" });
+            res.json({ status: "ok",msg:"successful data updated..!!" });
         } else {
             console.log("false")
-            res.json({ status: false });
+            res.json({ status: false ,msg:"not sufficient balance...!!" });
         }
 
         logger.info('admin/dahboard.js post dahboard  error => ');
@@ -203,23 +202,24 @@ router.put('/deductMoney', async (req, res) => {
         
         if (req.body.userId != undefined && req.body.type != undefined && req.body.money != undefined) {
 
-            const UserData = await Users.find({ _id: new mongoose.Types.ObjectId(req.body.userId) }, { sckId: 1, winningChips: 1 })
-            if (UserData != undefined && UserData[0].winningChips != undefined && UserData[0].winningChips < Number(req.body.money)) {
-                res.json({ status: false });
+            const UserData = await Users.find({ _id: new mongoose.Types.ObjectId(req.body.userId) }, { sckId: 1, chips: 1 })
+            if (UserData != undefined && UserData[0].chips != undefined && UserData[0].chips < Number(req.body.money)) {
+                res.json({ status: false,msg:"not sufficient balance...!!" });
                 return false
             }
 
             if (UserData != undefined && UserData[0].sckId != undefined) {
                 //await walletActions.deductWalletAdmin(req.body.userId, -Number(req.body.money), 4, req.body.type, {}, { id: UserData.sckId }, -1);
                 
-                await walletActions.deductWalletPayOut(req.body.userId, -Number(req.body.money), 4, "Debit",{},UserData[0].sckId,-1,"SORAT");
+                await walletActions.deductWallet(req.body.userId, -Number(req.body.money), 4, "Admin Deduct Chips",{},UserData[0].sckId,-1,"SORAT");
             }else{
-                await walletActions.deductWalletPayOut(req.body.userId, -Number(req.body.money), 4, "Debit",{},"",-1,"SORAT");
+                await walletActions.deductWallet(req.body.userId, -Number(req.body.money), 4, "Admin Deduct Chips",{},"",-1,"SORAT");
             }
 
-            res.json({ status: "ok" });
+            res.json({ status: "ok",msg:"successful data updated..!!" });
         } else {
-            res.json({ status: false });
+            res.json({ status: false,msg:"Not Proper Data Send...!!" });
+           
         }
 
     } catch (error) {
